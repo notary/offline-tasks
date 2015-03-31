@@ -19,7 +19,7 @@ Library to save the task when there is no connection to the Internet, and run wh
 ### 2. Registration functions tasks
 ```js
     offTasks.saveManagerRegistry('somaTasksName', function (taskData, callback) {
-        //something do there
+        //something do here
         callback('error); //or other status
     });
 ```
