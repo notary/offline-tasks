@@ -102,6 +102,6 @@ describe('lazy promo start tests', function () {
 				done();
 			}, 10);
 		});
-		offTasks.runTasks(key);
+		offTasks.run(key);
 	});
 });

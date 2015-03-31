@@ -58,7 +58,7 @@
 
 			var events = this.events[eventName];
 			if(events.indexOf(callback) < 0) {
-				this.events[eventName].push(callback);	
+				this.events[eventName].push(callback);
 			}
 		},
 
@@ -99,12 +99,13 @@
 		 * @param {Object} params
 		 *        {Object} params.provider
 		 *        {Function} params.connectionTest
+		 *        {Boolean} params.autorun
 		 *        {integer} [params.timeout]
 		 */
 		init: function (params) {
 			if(!params.provider)
 				throw 'provider can not be undefined';
-			if(!params.provider)
+			if(!params.connectionTest)
 				throw 'connectionTest can not be undefined';
 
 			EventListener.prototype.init.apply(this, params);
@@ -112,6 +113,7 @@
 			this.provider = params.provider;
 			this.test = params.connectionTest;
 			this.tick = params.timeout || 10000;
+			this.autorun = params.autorun || false;
 			this.connectionState = false;
 			this.tasks = null;
 			this.timeout = null;
@@ -126,7 +128,7 @@
 		checkConnection: function (callback) {
 			var self = this;
 			var fn = function (e, status) {
-				self.connectionState = status != 'error';
+				self.connectionState = status !== 'error';
 				callback && callback(e, status);
 			};
 			var result = this.test(fn);
@@ -205,7 +207,10 @@
 				data = cur.concat(data);
 			}
 			if(this.tasks) this.tasks[key] = data;
+
 			this.provider.setItem(storageKey, data);
+
+			if(this.autorun) this.run(key);
 		},
 
 		/**
@@ -233,7 +238,7 @@
 		 * Run saved tasks
 		 * @param {Array | string} keys
 		 */
-		runTasks: function (keys) {
+		run: function (keys) {
 			var self = this;
 			var fnOnConnection = null;
 
@@ -247,7 +252,7 @@
 					self._fire('on:connection:open');
 					self._runProcess(keys);
 				} else {
-					self.timeout = setTimeout(self.runTasks.bind(self, keys), self.tick);
+					self.timeout = setTimeout(self.run.bind(self, keys), self.tick);
 				}
 			};
 
@@ -270,8 +275,8 @@
 			var fnDone = function (task, index) {
 				var count = 0;
 				var length = self.tasks[task].length;
-				return function (e, status) {
-					if(status == 'success' || !status) {
+				return function (status) {
+					if(status !== 'error' || !status) {
 						count++;
 						self.remove(task, count < length ? index : null);
 					}
