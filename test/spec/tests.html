@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>Mocha</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
+</head>
+<body>
+<script src="../../node_modules/mocha/mocha.js"></script>
+<script src="../../src/offline-tasks.js"></script>
+<script src="../../src/providers/local-storage-prov.js"></script>
+<div id="sandbox"></div>
+<div id="mocha"></div>
+<script>mocha.setup('bdd');</script>
+<script src="./offline-tasks-tests.js"></script>
+<script>
+	mocha.run();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "offline-tasks",
+  "version": "0.0.1",
+  "description": "Library to save the task when there is no connection to the Internet, and run when an Internet connection will be",
+	"homepage": "https://github.com/Notary/gulp-localization",
+  "keywords": [
+    "offline",
+    "tasks",
+    "library"
+  ],
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+  "author": {
+    "name": "Maxim Victorov",
+    "email": "nkviz40k@gmail.com"
+  },
+  "main": "./src/offline-tasks.js",
+  "devDependencies": {
+    "mocha": "~2.0.1",
+  },
+  "engines": {
+    "node": ">=0.8.0",
+    "npm": ">=1.2.10"
+  }
+}
