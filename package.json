@@ -1,7 +1,7 @@
 {
   "name": "offline-tasks",
   "version": "0.0.2",
-  "description": "Library to save the task when there is no connection to the Internet, and run when an Internet connection will be",
+  "description": "Library for saving the task when there is no connection to the Internet, and run when an Internet connection will be",
 	"homepage": "https://github.com/Notary/offline-tasks.git",
   "keywords": [
     "offline",
