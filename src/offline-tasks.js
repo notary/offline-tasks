@@ -123,7 +123,8 @@
 
 		/**
 		 * Check connection
-		 * @returns {Boolean | Deferred}
+		 * @param {Function} callback
+		 * @returns {Boolean}
 		 */
 		checkConnection: function (callback) {
 			var self = this;
@@ -216,7 +217,7 @@
 		/**
 		 * Remove task by key
 		 * @param {string} key
-		 * @param {integer} [index]
+		 * @param {Number} [index]
 		 */
 		remove: function (key, index) {
 			var keys = this._getTaskKeys();
@@ -278,7 +279,9 @@
 				return function (status) {
 					if(status !== 'error' || !status) {
 						count++;
-						self.remove(task, count < length ? index : null);
+						index = count >= length ? null : index;
+						self.remove(task, index);
+						!index && self._fire('on:task:complete', task);
 					}
 				}
 			};
@@ -294,8 +297,6 @@
 					}
 				}
 			}
-
-
 		},
 
 		/**
