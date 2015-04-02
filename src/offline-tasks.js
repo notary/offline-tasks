@@ -94,6 +94,10 @@
 	 */
 	var KEYS_NAME = 'keys';
 
+	/**
+	 * events: on:connection:open, on:task:complete, on:tasks:allowed
+	 * @class OfflineTasks
+	 */
 	var OfflineTasks = EventListener.extend({
 		/**
 		 * @param {Object} params
@@ -164,6 +168,21 @@
 		},
 
 		/**
+		 * Check tasks in provider
+		 * @returns {boolean}
+		 */
+		hasTasks: function () {
+			var keys = this._getTaskKeys();
+			var result = !!(keys && keys.length);
+
+			if(result) {
+				this._fire('on:tasks:allowed', keys);
+			}
+
+			return result;
+		},
+
+		/**
 		 * Load tasks from provider by keys
 		 * @param {Array | string} keys
 		 * @param {Function} callback
@@ -171,7 +190,7 @@
 		load: function (keys) {
 			var keysArray = this._getTaskKeys();
 			var loadOne = false;
-			if(!keysArray) return null;
+			if(!keysArray || !keysArray.length) return null;
 			if(!keys) keys = keysArray;
 
 			if(Object.prototype.toString.apply(keys) !== '[object Array]'){
@@ -245,8 +264,10 @@
 
 			clearTimeout(self.timeout);
 
-			keys = keys || 	this._getTaskKeys();
+			keys = keys || this._getTaskKeys();
 			keys = this._loadKeys(keys);
+
+			if(!keys || !keys.length) return;
 
 			fnOnConnection = function () {
 				if(self.connectionState) {
