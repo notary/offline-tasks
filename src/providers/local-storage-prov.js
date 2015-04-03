@@ -2,7 +2,7 @@
 	var context = window || {};
 	if(typeof define === 'function' && define.amd) {
 		//AMD
-		define([], provider);
+		define(['OfflineTasks/Providers/storageProvider'], provider);
 	} else if (typeof exports === 'object') {
 		//CommonJS
 		provider();
