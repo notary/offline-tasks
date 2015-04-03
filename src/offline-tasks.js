@@ -134,6 +134,7 @@
 			var self = this;
 			var fn = function (e, status) {
 				self.connectionState = status !== 'error';
+				self.connectionState && self._fire('on:connection:open');
 				callback && callback(e, status);
 			};
 			var result = this.test(fn);
@@ -271,7 +272,6 @@
 
 			fnOnConnection = function () {
 				if(self.connectionState) {
-					self._fire('on:connection:open');
 					self._runProcess(keys);
 				} else {
 					self.timeout = setTimeout(self.run.bind(self, keys), self.tick);

@@ -63,3 +63,39 @@ Library for saving the task when there is no connection to the Internet, and run
 ```js
     offTasks.remove('key');
 ```
+
+### 8. Check Connection
+```js
+	offTasks.checkConnection(function (e, status) {
+		//do something
+	);
+```
+
+### 9. Check Tasks Exists
+```js
+	var result = offTasks.hasTasks();
+```
+
+### 10. Subscribing on events
+```js
+	var onConnectionOpen = function () {
+	    //do something 
+	 };
+	offTasks.on('on:connection:open', onConnectionOpen);
+```
+
+### 11. Describing from events
+```js
+	offTasks.off('on:connection:open', onConnectionOpen);
+```
+
+## Events
+
+### 1. on:connection:open
+	Triggered when connection opened
+
+### 2. on:task:complete
+	Triggered when task completed
+	
+### 3. on:tasks:allowed
+	Triggered if there is available tasks
