@@ -4,7 +4,7 @@
 	var context = window || {};
 	if(typeof define === 'function' && define.amd) {
 		//AMD
-		define('OfflineTasks', manager);
+		define(manager);
 	} else if (typeof exports === 'object') {
 		//CommonJS
 		manager();
