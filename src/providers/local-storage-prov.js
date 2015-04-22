@@ -60,7 +60,6 @@
 
 		storageProvider.setOptions(null);
 
-		//if ctx is define then add Provider to ctx
 		return storageProvider;
 	})
 );

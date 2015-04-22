@@ -31,7 +31,9 @@
 		Constructor.extend = Class.extend;
 
 		for(var name in props) {
-			Constructor.prototype[name] = props[name];
+			if(props.hasOwnProperty(name)) {
+				Constructor.prototype[name] = props[name];
+			}
 		}
 
 		return Constructor;
@@ -200,7 +202,6 @@
 		/**
 		 * Load tasks from provider by keys
 		 * @param {Array | string} keys
-		 * @param {Function} callback
 		 */
 		load: function (keys) {
 			var keysArray = this._getTaskKeys();
