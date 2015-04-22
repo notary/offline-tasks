@@ -47,6 +47,20 @@
 		return result;
 	};
 
+
+	function isArray (obj) {
+		return Object.prototype.toString.apply(obj) === '[object Array]'
+
+	}
+
+	function isFunction (obj) {
+		return typeof obj === 'function';
+	}
+
+	function isBoolean (obj) {
+		return Object.prototype.toString.apply(obj) === '[object Boolean]'
+	}
+
 	var EventListener = Class.extend({
 		init: function () {
 			this.events = {};
@@ -139,7 +153,7 @@
 			};
 			var result = this.test(fn);
 			this.connectionState  = false;
-			if(Object.prototype.toString.apply(result) === '[object Boolean]'){
+			if(isBoolean(result)){
 				fn(null, result === true ? 'success' : 'error');
 			}
 			return result;
@@ -160,7 +174,7 @@
 
 		_loadKeys: function (keys) {
 			var i = 0;
-			if(Object.prototype.toString.call(keys) !== '[object Array]') keys = [keys];
+			if(isArray(keys)) keys = [keys];
 			for(; i < keys.length; i++) {
 				this._curKeys[keys[i]] = true;
 			}
@@ -194,7 +208,7 @@
 			if(!keysArray || !keysArray.length) return null;
 			if(!keys) keys = keysArray;
 
-			if(Object.prototype.toString.apply(keys) !== '[object Array]'){
+			if(isArray(keys)){
 				loadOne = true;
 				keys = [keys];
 			}
@@ -222,7 +236,7 @@
 				keys.push(key);
 				this.provider.setItem(this._getKey(KEYS_NAME), keys);
 			}
-			if(Object.prototype.toString.apply(data) !== '[object Array]') data = [data];
+			if(isArray(data)) data = [data];
 			if(hasKey && !isRewrite) {
 				var cur = this.provider.getItem(storageKey) || [];
 				data = cur.concat(data);
@@ -310,7 +324,7 @@
 			for(var i = 0; i < keys.length; i++) {
 				key = keys[i];
 				if(!this.tasks[key] || !(saveManager = this.saveManagers[key])) continue;
-				fnSave = typeof saveManager === 'function' ? saveManager : saveManager.save.bind(saveManager);
+				fnSave = isFunction(saveManager) ? saveManager : saveManager.save.bind(saveManager);
 				var tasks = this.tasks[key];
 				for(var j = 0; j < tasks.length; j++) {
 					if(tasks[j]) {
