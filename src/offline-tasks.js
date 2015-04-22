@@ -176,12 +176,21 @@
 
 		_loadKeys: function (keys) {
 			var i = 0;
-			if(!isArray(keys)) keys = [keys];
+			keys = this._wrapIfNotArray(keys);
 			for(; i < keys.length; i++) {
 				this._curKeys[keys[i]] = true;
 			}
 
 			return objectKeys(this._curKeys);
+		},
+
+		_wrapIfNotArray: function (obj, callback) {
+			if(!isArray(obj)) {
+				obj = [obj];
+				callback && callback();
+			}
+
+			return obj;
 		},
 
 		/**
@@ -209,10 +218,10 @@
 			if(!keysArray || !keysArray.length) return null;
 			if(!keys) keys = keysArray;
 
-			if(!isArray(keys)){
+			keys = this._wrapIfNotArray(keys, function () {
 				loadOne = true;
-				keys = [keys];
-			}
+			});
+
 			this.tasks = {};
 			for(var i = 0; i < keys.length; i++) {
 				if (keysArray === keys || !!~keysArray.indexOf(keys[i])) {
@@ -237,7 +246,7 @@
 				keys.push(key);
 				this.provider.setItem(this._getKey(KEYS_NAME), keys);
 			}
-			if(!isArray(data)) data = [data];
+			data = this._wrapIfNotArray(data);
 			if(hasKey && !isRewrite) {
 				var cur = this.provider.getItem(storageKey) || [];
 				data = cur.concat(data);
