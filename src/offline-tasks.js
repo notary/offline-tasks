@@ -7,7 +7,7 @@
 		define(manager);
 	} else if (typeof exports === 'object') {
 		//CommonJS
-		manager();
+		module.exports = manager();
 	} else {
 		//Globals
 		window.OfflineTasks = manager();
@@ -208,7 +208,7 @@
 			if(!keysArray || !keysArray.length) return null;
 			if(!keys) keys = keysArray;
 
-			if(isArray(keys)){
+			if(!isArray(keys)){
 				loadOne = true;
 				keys = [keys];
 			}
@@ -236,7 +236,7 @@
 				keys.push(key);
 				this.provider.setItem(this._getKey(KEYS_NAME), keys);
 			}
-			if(isArray(data)) data = [data];
+			if(!isArray(data)) data = [data];
 			if(hasKey && !isRewrite) {
 				var cur = this.provider.getItem(storageKey) || [];
 				data = cur.concat(data);
