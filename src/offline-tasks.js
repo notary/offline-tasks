@@ -176,7 +176,7 @@
 
 		_loadKeys: function (keys) {
 			var i = 0;
-			if(isArray(keys)) keys = [keys];
+			if(!isArray(keys)) keys = [keys];
 			for(; i < keys.length; i++) {
 				this._curKeys[keys[i]] = true;
 			}
