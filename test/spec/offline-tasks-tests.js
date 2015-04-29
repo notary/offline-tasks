@@ -62,10 +62,60 @@ describe('lazy promo start tests', function () {
 		offTasks.save(key2, obj2, true);
 		var result = offTasks.load([key1, key2]);
 		assert(
-				result[key1]
+			result[key1]
 			&& result[key2]
 			&& result[key1][0].test === 1
 			&& result[key2][0].test === 2
+		);
+		done();
+	});
+
+	it('check save/load bulk rewrite = true', function (done) {
+		var key1 = 'test1';
+		var key2 = 'test2';
+
+		var obj = {};
+		obj[key1] = {test: 1};
+		obj[key2] = {test: 2};
+
+		offTasks.save(obj, true);
+
+		obj[key1].test = 3;
+		obj[key2].test = 4;
+
+		offTasks.save(obj, true);
+
+		var result = offTasks.load([key1, key2]);
+		assert(result[key1]
+			&& result[key2]
+			&& result[key1][0].test === 3
+			&& result[key2][0].test === 4
+		);
+		done();
+	});
+
+	it('check save/load bulk rewrite = false', function (done) {
+		var key1 = 'test1';
+		var key2 = 'test2';
+
+		var obj = {};
+		obj[key1] = {test: 1};
+		obj[key2] = {test: 2};
+
+		offTasks.save(obj, true);
+
+		obj[key1].test = 3;
+		obj[key2].test = 4;
+
+		offTasks.save(obj);
+
+		var result = offTasks.load([key1, key2]);
+		assert(result[key1]
+				&& result[key2]
+				&& result[key1][0].test === 1
+				&& result[key2][0].test === 2
+				&& result[key1][1].test === 3
+				&& result[key2][1].test === 4
 		);
 		done();
 	});

@@ -63,6 +63,24 @@
 		return Object.prototype.toString.apply(obj) === '[object Boolean]'
 	}
 
+	function isPlainObject(obj) {
+		if (!obj || Object.prototype.toString.call(obj) !== '[object Object]' || obj.nodeType || obj.setInterval)
+			return false;
+
+		var has_own_constructor = obj.hasOwnProperty('constructor');
+		var has_is_property_of_method = obj.hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf');
+		// Not own constructor property must be Object
+		if (obj.constructor && !has_own_constructor && !has_is_property_of_method)
+			return false;
+
+		// Own properties are enumerated firstly, so to speed up,
+		// if last one is own, then all properties are own.
+		var key;
+		for ( key in obj ) {}
+
+		return key === undefined || obj.hasOwnProperty( key );
+	};
+
 	var EventListener = Class.extend({
 		init: function () {
 			this.events = {};
@@ -233,29 +251,65 @@
 
 		/**
 		 * Save task with provider
-		 * @param {string} key
-		 * @param {Object | Array} data
+		 * @param {string|object} key
+		 * @param {Object | Array | Boolean} data
 		 * @param {Boolean} [isRewrite]
 		 */
 		save: function (key, data, isRewrite) {
-			var keys = this._getTaskKeys();
-			var hasKey = true;
-			var storageKey = this._getKey(key);
-			if(!~keys.indexOf(key)) {
-				hasKey = false;
-				keys.push(key);
-				this.provider.setItem(this._getKey(KEYS_NAME), keys);
+			var hasKeys = null;
+			if(isPlainObject(key)) {
+				hasKeys = this._saveKeys(objectKeys(key));
+				isRewrite = data;
+				data = null;
+				this._saveMany(key, isRewrite ? hasKeys : null);
+			} else {
+				hasKeys = this._saveKeys(key);
+				this._saveOne(key, data, isRewrite ? hasKeys : null);
 			}
+
+			if(this.autorun) this.run(key);
+		},
+
+		_saveKeys: function (keys) {
+			var curKeys = this._getTaskKeys();
+			var hasKeys = {};
+			var key = null;
+			keys = this._wrapIfNotArray(keys);
+
+			for(var i = 0; i < keys.length; i++) {
+				key = keys[i];
+				if(!!~curKeys.indexOf(key)) {
+					hasKeys[key] = true;
+				} else {
+					curKeys.push(key);
+				}
+			}
+
+			this.provider.setItem(this._getKey(KEYS_NAME), curKeys);
+			return hasKeys;
+		},
+
+		_saveMany: function (items, rewritingKeys) {
+			for (var item in items) {
+				if(items.hasOwnProperty(item)) {
+					this._saveOne(item, items[item], rewritingKeys);
+				}
+			}
+		},
+
+		_saveOne: function (key, data, rewritingKeys) {
+			var storageKey = this._getKey(key);
+
 			data = this._wrapIfNotArray(data);
-			if(hasKey && !isRewrite) {
+
+			if(!rewritingKeys || !rewritingKeys[key]) {
 				var cur = this.provider.getItem(storageKey) || [];
 				data = cur.concat(data);
 			}
+
 			if(this.tasks) this.tasks[key] = data;
 
 			this.provider.setItem(storageKey, data);
-
-			if(this.autorun) this.run(key);
 		},
 
 		/**
