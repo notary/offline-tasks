@@ -1,5 +1,6 @@
 # offline-tasks
-Library for saving the task when there is no connection to the Internet, and run when an Internet connection will be
+Library to save the task when there is no connection to the Internet, and run when an Internet connection will be
+
 
 ## Using
 ### 1. Create
@@ -19,7 +20,7 @@ Library for saving the task when there is no connection to the Internet, and run
 ### 2. Registration functions tasks
 ```js
     offTasks.saveManagerRegistry('somaTasksName', function (taskData, callback) {
-        //something do here
+        //something do there
         callback('error); //or other status
     });
 ```
@@ -32,12 +33,36 @@ Library for saving the task when there is no connection to the Internet, and run
     offTasks.save('taskName', task2);
     // in the storage will be saved [{data: 'example 1'}, {data: 'example 2'}]
 ```
+or
+
+```js
+    var tasks = {
+        taskname1: {data: 'example 1'},
+        taskname2: {data: 'example 2'}
+    };
+    offTasks.save(tasks); // in the storage will be saved 2 different task
+```
 ```js
     var task1 = {data: 'example 1'};
     var task2 = {data: 'example 2'};
     offTasks.save('taskName', task1);
     offTasks.save('taskName', task2, true); // rewrite tasks is true
     // in the storage will be saved [{data: 'example 2'}]
+```
+
+or
+
+```js
+    var tasks = {
+        taskname1: {data: 'example 1'},
+        taskname2: {data: 'example 2'}
+    };
+    var tasks2 = {
+        taskname1: {data: 'example 3'},
+        taskname2: {data: 'example 4'}
+    };
+    offTasks.save(tasks);
+    offTasks.save(tasks, true); //in storage will saved {data: 'example 3'} and {data: 'example 4'}
 ```
 
 ### 4. Load all tasks from provider
@@ -63,39 +88,3 @@ Library for saving the task when there is no connection to the Internet, and run
 ```js
     offTasks.remove('key');
 ```
-
-### 8. Check Connection
-```js
-	offTasks.checkConnection(function (e, status) {
-		//do something
-	);
-```
-
-### 9. Check Tasks Exists
-```js
-	var result = offTasks.hasTasks();
-```
-
-### 10. Subscribing on events
-```js
-	var onConnectionOpen = function () {
-	    //do something 
-	 };
-	offTasks.on('on:connection:open', onConnectionOpen);
-```
-
-### 11. Describing from events
-```js
-	offTasks.off('on:connection:open', onConnectionOpen);
-```
-
-## Events
-
-### 1. on:connection:open
-	Triggered when connection opened
-
-### 2. on:task:complete
-	Triggered when task completed
-	
-### 3. on:tasks:allowed
-	Triggered if there is available tasks
