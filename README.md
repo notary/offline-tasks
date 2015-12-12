@@ -21,7 +21,7 @@ Library to save the task when there is no connection to the Internet, and run wh
 ```js
     offTasks.saveManagerRegistry('somaTasksName', function (taskData, callback) {
         //something do there
-        callback('error); //or other status
+        callback('error'); //or other status
     });
 ```
 
